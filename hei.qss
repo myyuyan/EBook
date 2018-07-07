@@ -1,11 +1,11 @@
 /**********子界面背景**********/
 QMainWindow {
-        background: rgb(0, 0, 0);
+        background: rgb(88, 87, 86);
 }
 
 /**********子界面中央背景**********/
 QWidget {
-        background: rgb(0, 0, 0);
+        background: rgb(88, 87, 86);
 }
 
 /**********主界面样式**********/
