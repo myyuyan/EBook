@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>hei.qss</file>
-        <file>info.ini</file>
+        <file>info.txt</file>
     </qresource>
 </RCC>

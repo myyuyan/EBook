@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 #include<QMessageBox>
-#include <QSettings>
+#include<QFile>
+#include<QDir>
+#include<qdebug.h>
 namespace Ui {
 class MainWindow;
 }
