@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>hei.qss</file>
         <file>info.txt</file>
+        <file>icon.jpg</file>
     </qresource>
 </RCC>

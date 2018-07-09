@@ -109,29 +109,13 @@ QStatusBar::item {
         border-right: 1px solid rgb(100, 100, 100);
 }
 /**********表格**********/
-QTreeView {
+QTreeWidget {
+        color: rgb(175, 175, 175);
         border: 1px solid rgb(45, 45, 45);
-        background: rgb(57, 58, 60);
+        background: rgb(72, 72, 74);
         gridline-color: rgb(60, 60, 60);
 }
-QTreeView::item {
-        padding-left: 5px;
-        padding-right: 5px;
-        border: none;
-        background: rgb(72, 72, 74);
-        border-right: 1px solid rgb(45, 45, 45);
-        border-bottom: 1px solid rgb(45, 45, 45);
-}
-QTreeView::item:selected {
-        background: rgba(255, 255, 255, 40);
-}
-QTreeView::item:selected:!active {
-        color: white;
-}
-QTreeView::indicator {
-        width: 20px;
-        height: 20px;
-}
+
 QScrollBar:vertical {
         width: 20px;
         background: transparent;

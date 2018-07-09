@@ -6,6 +6,8 @@
 #include<QFile>
 #include<QDir>
 #include<qdebug.h>
+#include <QTreeWidgetItem>
+#include <QInputDialog>
 namespace Ui {
 class MainWindow;
 }

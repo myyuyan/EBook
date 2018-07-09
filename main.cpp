@@ -5,17 +5,17 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Q_INIT_RESOURCE(mystyle);
-    QFile file(":/hei.qss");
-    if(file.open(QFile::ReadOnly))
+    QFile filel(":/hei.qss");
+    if(filel.open(QFile::ReadWrite))
     {
-        QString styleSheet = QLatin1String(file.readAll());
+        QString styleSheet = QLatin1String(filel.readAll());
         a.setStyleSheet(styleSheet);
     }
     else
     {
         QMessageBox::warning(NULL, "warning", "Open failed", QMessageBox::Yes | QMessageBox::Yes);
     }
-    file.close();
+    filel.close();
     MainWindow w;
     w.show();
 
