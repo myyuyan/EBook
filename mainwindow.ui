@@ -41,6 +41,11 @@
            <height>16777215</height>
           </size>
          </property>
+         <property name="font">
+          <font>
+           <pointsize>11</pointsize>
+          </font>
+         </property>
          <property name="cursor" stdset="0">
           <cursorShape>PointingHandCursor</cursorShape>
          </property>
@@ -58,29 +63,19 @@
         </widget>
        </item>
        <item>
-        <widget class="QTextEdit" name="textEdit"/>
+        <widget class="QTextEdit" name="textEdit">
+         <property name="font">
+          <font>
+           <family>楷体</family>
+           <pointsize>20</pointsize>
+          </font>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
     </item>
    </layout>
-  </widget>
-  <widget class="QMenuBar" name="menuBar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>946</width>
-     <height>23</height>
-    </rect>
-   </property>
-   <widget class="QMenu" name="menu">
-    <property name="title">
-     <string>选项</string>
-    </property>
-    <addaction name="action"/>
-   </widget>
-   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action">
@@ -91,5 +86,25 @@
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>treeWidget</sender>
+   <signal>itemClicked(QTreeWidgetItem*,int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>itemclick()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>79</x>
+     <y>161</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>6</x>
+     <y>163</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>itemclick()</slot>
+ </slots>
 </ui>

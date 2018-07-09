@@ -5,8 +5,8 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     Q_INIT_RESOURCE(mystyle);
-    QFile filel(":/hei.qss");
-    if(filel.open(QFile::ReadWrite))
+    QFile filel("hei.qss");
+    if(filel.open(QFile::ReadOnly))
     {
         QString styleSheet = QLatin1String(filel.readAll());
         a.setStyleSheet(styleSheet);

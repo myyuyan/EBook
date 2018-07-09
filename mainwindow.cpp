@@ -5,10 +5,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->textEdit->setReadOnly(true);
+    ui->textEdit->setText(QStringLiteral("欢迎使用EBook!"));
     bool choose=true;
     while(choose){
-    QFile file(":/info.txt");
-    if(file.open(QFile::ReadWrite))
+    ui->treeWidget->clear();
+    QFile file("info.txt");
+    if(file.open(QFile::ReadOnly))
     {
         QTextStream toText(&file);
         toText.setCodec("UTF-8");
@@ -16,7 +19,29 @@ MainWindow::MainWindow(QWidget *parent) :
         file.close();
         qDebug()<<info;
         QDir dir(info);
-        if(dir.exists()){
+        QString title=info.right(info.length()-info.lastIndexOf("\\")-1);
+        qDebug()<<title;
+        if(!(dir.exists())||((title.compare(QString::fromLocal8Bit("古文书籍-文件版"))))){
+            QFile out("info.txt");
+            if(!out.open(QFile::WriteOnly|QFile::Truncate)){
+                out.close();
+                continue;
+            }
+            QTextStream to(&out);
+            to.setCodec("UTF-8");
+            bool isok;
+            QString text = QInputDialog::getText(NULL, QStringLiteral("错误"),
+                                                                QStringLiteral("把数据库正确路径粘贴至此"),
+                                                                QLineEdit::Normal,
+                                                                QStringLiteral(""),
+                                                                &isok);
+            if(!isok){
+                choose=false;
+                continue;
+            }
+            to<<text;
+            out.close();
+        }else{
             choose=false;
             QStringList li;
             li.clear();
@@ -34,29 +59,12 @@ MainWindow::MainWindow(QWidget *parent) :
                 QTreeWidgetItem *items = new QTreeWidgetItem(ui->treeWidget,lt);
             }
             qDebug()<<li;
-        }else{
-            QFile out(":/info.txt");
-            if(out.open(QFile::WriteOnly))
-            {
-                bool isok;
-                QString text = QInputDialog::getText(NULL,QStringLiteral("错误"),QStringLiteral("请输入数据库正确路径！"),QLineEdit::Normal,QStringLiteral("把路径复制到这里！"),&isok);
-                if(!isok){
-                    choose=false;
-                }
-                std::string tex = text.toStdString();
-                out.write(tex.c_str(),sizeof(tex.c_str()));
-            }else{
-                QMessageBox::warning(NULL, "warning", "Open null2", QMessageBox::Yes | QMessageBox::Yes);
-                choose=false;
-            }
-            out.close();
         }
     }
     else
     {
         QMessageBox::warning(NULL, "warning", "Open null1", QMessageBox::Yes | QMessageBox::Yes);
         choose=false;
-        file.close();
     }
     }
 }
@@ -64,4 +72,9 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
+{
+    qDebug()<<index;
 }
