@@ -17,10 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
         toText.setCodec("UTF-8");
         info = toText.readAll();
         file.close();
-        qDebug()<<info;
         QDir dir(info);
         QString title=info.right(info.length()-info.lastIndexOf("\\")-1);
-        qDebug()<<title;
         if(!(dir.exists())||((title.compare(QString::fromLocal8Bit("古文书籍-文件版"))))){
             QFile out("info.txt");
             if(!out.open(QFile::WriteOnly|QFile::Truncate)){
@@ -43,23 +41,24 @@ MainWindow::MainWindow(QWidget *parent) :
             out.close();
         }else{
             choose=false;
-            QStringList li;
+            QStringList li,la;
             li.clear();
+            la.clear();
             foreach(QFileInfo fullDir, dir.entryInfoList())
             {
                 if(fullDir.fileName() == "." || fullDir.fileName() == "..") continue;
                 li.push_back(fullDir.fileName());
+                la.push_back(fullDir.filePath());
             }
             for(int i = 0; i< li.size();i++)
             {
                 QString tmp = li.at(i);
-                qDebug()<<tmp;
                 QTreeWidgetItem *items = new QTreeWidgetItem();
                 items->setText(0,tmp);
+                init(la.at(i),li.at(i),items);
                 rootList.append(items);
             }
             ui->treeWidget->insertTopLevelItems(0,rootList);
-            qDebug()<<li;
         }
     }
     else
@@ -77,13 +76,10 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
 {
-    qDebug()<<index.row()<<index.column();
     QString zifu=index.data().toString();
     QString in=info+"\\"+index.data().toString();
-    qDebug()<<zifu;
     if((zifu.contains(".",Qt::CaseSensitive))){
         QString zi=zifu.right(zifu.length()-zifu.lastIndexOf(".")-1);
-        qDebug()<<zi;
         if(!zi.compare(QString::fromLocal8Bit("txt"))){
             QFile fu(in);
             if(fu.open(QFile::ReadOnly)){
@@ -99,25 +95,29 @@ void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
             QMessageBox::warning(NULL, "warning", QStringLiteral("文件格式不支持！"), QMessageBox::Yes | QMessageBox::Yes);
         }
     }else{
-        QDir dirs(in);
-        if(dirs.exists()){
-            QStringList lis;
-            lis.clear();
-            foreach(QFileInfo fullDir, dirs.entryInfoList())
+
+    }
+}
+void MainWindow::init(QString la,QString li,QTreeWidgetItem *items){
+    if((li.contains(".",Qt::CaseSensitive))){
+    }else{
+        QDir dir(la);
+        if(dir.exists()){
+            QStringList name,path;
+            name.clear();
+            path.clear();
+            foreach(QFileInfo fullDir, dir.entryInfoList())
             {
                 if(fullDir.fileName() == "." || fullDir.fileName() == "..") continue;
-                lis.push_back(fullDir.fileName());
+                name.push_back(fullDir.fileName());
+                path.push_back(fullDir.filePath());
+                QTreeWidgetItem *item = new QTreeWidgetItem();
+                item->setText(0,fullDir.fileName());
+                init(fullDir.filePath(),fullDir.fileName(),item);
+                items->addChild(item);
             }
-            for(int i = 0; i< lis.size();i++)
-            {
-                QString tmp = lis.at(i);
-                qDebug()<<tmp;
-                QStringList lt;
-                lt<<tmp;
-                QTreeWidgetItem *item=rootList.at(index.row());
-                item->removeChild(item);
-                QTreeWidgetItem *items = new QTreeWidgetItem(item,lt);
-            }
+        }else{
+            QMessageBox::warning(NULL, "warning", "Open null", QMessageBox::Yes | QMessageBox::Yes);
         }
     }
 }

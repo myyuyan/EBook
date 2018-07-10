@@ -27,6 +27,7 @@ private:
     Ui::MainWindow *ui;
     QString info;
     QList<QTreeWidgetItem *> rootList;
+    void init(QString la,QString li,QTreeWidgetItem *items);
 };
 
 #endif // MAINWINDOW_H
