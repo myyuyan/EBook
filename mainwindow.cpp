@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent) :
     {
         QTextStream toText(&file);
         toText.setCodec("UTF-8");
-        QString info = toText.readAll();
+        info = toText.readAll();
         file.close();
         qDebug()<<info;
         QDir dir(info);
@@ -54,16 +54,17 @@ MainWindow::MainWindow(QWidget *parent) :
             {
                 QString tmp = li.at(i);
                 qDebug()<<tmp;
-                QStringList lt;
-                lt<<tmp;
-                QTreeWidgetItem *items = new QTreeWidgetItem(ui->treeWidget,lt);
+                QTreeWidgetItem *items = new QTreeWidgetItem();
+                items->setText(0,tmp);
+                rootList.append(items);
             }
+            ui->treeWidget->insertTopLevelItems(0,rootList);
             qDebug()<<li;
         }
     }
     else
     {
-        QMessageBox::warning(NULL, "warning", "Open null1", QMessageBox::Yes | QMessageBox::Yes);
+        QMessageBox::warning(NULL, "warning", "Open null", QMessageBox::Yes | QMessageBox::Yes);
         choose=false;
     }
     }
@@ -76,5 +77,47 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
 {
-    qDebug()<<index;
+    qDebug()<<index.row()<<index.column();
+    QString zifu=index.data().toString();
+    QString in=info+"\\"+index.data().toString();
+    qDebug()<<zifu;
+    if((zifu.contains(".",Qt::CaseSensitive))){
+        QString zi=zifu.right(zifu.length()-zifu.lastIndexOf(".")-1);
+        qDebug()<<zi;
+        if(!zi.compare(QString::fromLocal8Bit("txt"))){
+            QFile fu(in);
+            if(fu.open(QFile::ReadOnly)){
+                QTextStream toT(&fu);
+                toT.setCodec("ANSI");
+                QString text = toT.readAll();
+                ui->textEdit->setText(text);
+            }else{
+                QMessageBox::warning(NULL, "warning", "Open warning", QMessageBox::Yes | QMessageBox::Yes);
+            }
+            fu.close();
+        }else{
+            QMessageBox::warning(NULL, "warning", QStringLiteral("文件格式不支持！"), QMessageBox::Yes | QMessageBox::Yes);
+        }
+    }else{
+        QDir dirs(in);
+        if(dirs.exists()){
+            QStringList lis;
+            lis.clear();
+            foreach(QFileInfo fullDir, dirs.entryInfoList())
+            {
+                if(fullDir.fileName() == "." || fullDir.fileName() == "..") continue;
+                lis.push_back(fullDir.fileName());
+            }
+            for(int i = 0; i< lis.size();i++)
+            {
+                QString tmp = lis.at(i);
+                qDebug()<<tmp;
+                QStringList lt;
+                lt<<tmp;
+                QTreeWidgetItem *item=rootList.at(index.row());
+                item->removeChild(item);
+                QTreeWidgetItem *items = new QTreeWidgetItem(item,lt);
+            }
+        }
+    }
 }

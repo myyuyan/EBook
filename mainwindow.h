@@ -25,6 +25,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QString info;
+    QList<QTreeWidgetItem *> rootList;
 };
 
 #endif // MAINWINDOW_H
