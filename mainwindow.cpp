@@ -76,27 +76,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_treeWidget_clicked(const QModelIndex &index)
 {
-    QString zifu=index.data().toString();
-    QString in=info+"\\"+index.data().toString();
-    if((zifu.contains(".",Qt::CaseSensitive))){
-        QString zi=zifu.right(zifu.length()-zifu.lastIndexOf(".")-1);
-        if(!zi.compare(QString::fromLocal8Bit("txt"))){
-            QFile fu(in);
-            if(fu.open(QFile::ReadOnly)){
-                QTextStream toT(&fu);
-                toT.setCodec("ANSI");
-                QString text = toT.readAll();
-                ui->textEdit->setText(text);
-            }else{
-                QMessageBox::warning(NULL, "warning", "Open warning", QMessageBox::Yes | QMessageBox::Yes);
-            }
-            fu.close();
-        }else{
-            QMessageBox::warning(NULL, "warning", QStringLiteral("文件格式不支持！"), QMessageBox::Yes | QMessageBox::Yes);
-        }
-    }else{
 
-    }
 }
 void MainWindow::init(QString la,QString li,QTreeWidgetItem *items){
     if((li.contains(".",Qt::CaseSensitive))){
@@ -119,5 +99,43 @@ void MainWindow::init(QString la,QString li,QTreeWidgetItem *items){
         }else{
             QMessageBox::warning(NULL, "warning", "Open null", QMessageBox::Yes | QMessageBox::Yes);
         }
+    }
+}
+
+void MainWindow::on_treeWidget_itemClicked(QTreeWidgetItem *item, int column)
+{
+    QStringList path;
+    QTreeWidgetItem *items=item;
+    while(items!=NULL){
+        path<<items->text(0);
+        items=items->parent();
+    }
+    QString str;
+    for(int i=(path.size()-1);i>=0;i--){
+        str+=path.at(i);
+        if(i!=0)
+            str+="\\";
+    }
+    qDebug()<<str;
+    QString zifu=str;
+    QString in=info+"\\"+str;
+    if((zifu.contains(".",Qt::CaseSensitive))){
+        QString zi=zifu.right(zifu.length()-zifu.lastIndexOf(".")-1);
+        if(!zi.compare(QString::fromLocal8Bit("txt"))){
+            QFile fu(in);
+            if(fu.open(QFile::ReadOnly)){
+                QTextStream toT(&fu);
+                toT.setCodec("ANSI");
+                QString text = toT.readAll();
+                ui->textEdit->setText(text);
+            }else{
+                QMessageBox::warning(NULL, "warning", "Open warning", QMessageBox::Yes | QMessageBox::Yes);
+            }
+            fu.close();
+        }else{
+            QMessageBox::warning(NULL, "warning", QStringLiteral("文件格式不支持！"), QMessageBox::Yes | QMessageBox::Yes);
+        }
+    }else{
+
     }
 }

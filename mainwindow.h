@@ -23,6 +23,8 @@ public:
 private slots:
     void on_treeWidget_clicked(const QModelIndex &index);
 
+    void on_treeWidget_itemClicked(QTreeWidgetItem *item, int column);
+
 private:
     Ui::MainWindow *ui;
     QString info;
